@@ -3,10 +3,11 @@ import { useState } from 'react';
 import '../Addpet/styleaddpet.css';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams} from "react-router-dom";
 
 const Addpet = () => {
     const navigate = useNavigate()
+    const {petid} = useParams();
 
     const [pet, setPet] = useState({
         petName: "",
@@ -15,10 +16,11 @@ const Addpet = () => {
         petDoB: "",
         petPfp: null,
     });
-
+    const [imageUrl, setImageUrl] = useState(null);
+    
     const handleChange = (e) => {
         const { name , value, files } = e.target;
-
+        
         if (name === 'petPfp') {
             const reader = new FileReader();
             const file = files[0];
@@ -31,7 +33,8 @@ const Addpet = () => {
                         dataUrl: reader.result,
                     },
                 });
-            };
+                setImageUrl(reader.result);
+                    };
             if (file) {
                 reader.readAsDataURL(file);
             } 
@@ -40,7 +43,7 @@ const Addpet = () => {
                 ...pet,
                 [name]: value,
             });
-        }
+    }
     };
 
     const handleSubmit = async (e) => {
@@ -66,7 +69,7 @@ const Addpet = () => {
                 navigate('/home')
             }
         }
-        catch(err){console.error(err)}
+        catch(err){alert("Please use another pic")}
     }
 
     return (
@@ -85,14 +88,20 @@ const Addpet = () => {
         </div>
         <main>
             <form onSubmit={ handleSubmit } encType="multipart/form-data">
-                <div class="container">
-                    <div class="img-area" data-img="">
+            <div class="container">
+            <div class="img-area" data-img="">
+                {imageUrl ? (
+                    <img src={imageUrl} alt="Pet" className="preview-image" />
+                ) : (
+                    <>
                         <i class='bx bxs-cloud-upload icon'></i>
                         <h3>Upload Image</h3>
                         <p>Image size must be less than <span>2MB</span></p>
-                    </div>
-                    <input type="file" id="file" name="petPfp" multiple={false} onChange={ handleChange }/>
-                </div>
+                    </>
+                )}
+            </div>
+                <input type="file" id="file" name="petPfp" multiple={false} onChange={ handleChange }/>
+            </div>
 
                 <div class="textinfo">
                     <label for="name">Name</label>

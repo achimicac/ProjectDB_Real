@@ -7,17 +7,20 @@ import jwt from 'jsonwebtoken';
 
 export const userEdit = async (req, res, next) => {
 
-      const { username, fname, lname, email, phone, pfp } = req.body;
-      const id = jwt.decode(req.cookies.userRegistered, process.env.JWT_SECRET).id;
+      const userRegisteredCookie = req.cookies.userRegistered;
+      const decodedToken = jwt.decode(userRegisteredCookie, process.env.JWT_SECRET);
+
+      const { fname, lname, email, phone} = req.body;
 
       try {
-            db.query('UPDATE User SET username=?, fname=?, lname=?, email=?, phone=?, pfp=? WHERE id=?', [username, fname, lname, email, phone, pfp, decodedToken.id], (err, result) => {
+
+            db.query('UPDATE User SET fname=?, lname=?, email=?, phone=? WHERE id=?', [fname, lname, email, phone, decodedToken.id], (err, result) => {
                   if (err) {
                         console.log("Can't Edit user inform");
                         console.log(err);
                   }else{
                         //console.log("from petprofile.js: " + req.params.petid + " name: " + result[0].petName);
-                        console.log("Edit pet inform success");
+                        console.log("Edit user inform success");
                         res.json({status: "success", success: "Edit Success"});
                   }
             })

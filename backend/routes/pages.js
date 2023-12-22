@@ -6,7 +6,7 @@ import {allPet} from '../controllers/home.js';
 import {petprofile} from '../controllers/petprofile.js';
 import {petdelete} from '../controllers/petDelete.js';
 import {petvaccine} from '../controllers/petvaccine.js';
-//import {calendar} from '../controllers/calendar.js';
+import {calendar, selectmonth} from '../controllers/calendar.js';
 import {article} from '../controllers/articles.js';
 import {appoint} from '../controllers/app.js';
 import { login } from "../controllers/login.js";
@@ -17,6 +17,12 @@ import multer from 'multer';
 import {db} from '../routes/db-config.js';
 import jwt from 'jsonwebtoken';
 import { userEdit } from "../controllers/useredit.js";
+import {petrecord} from '../controllers/petrecord.js';
+import {addrecord} from '../controllers/addrecord.js';
+import {allprocedure} from '../controllers/addrecord.js';
+import { updateApp } from "../controllers/app.js";
+import pkg from 'body-parser';
+
 export const router = express.Router();
 
 function formatDate(dateString) {
@@ -76,7 +82,7 @@ router.post("/login", login);
 
 router.post("/petregister", upload.single("petPfp"), petregister);
 
-router.post('/userprofile/edit', userEdit);
+router.put('/userprofile/edit', userEdit);
 
 router.get("/articles", article, (req, res, next) => {
     const data = res.all_article;
@@ -91,7 +97,8 @@ router.get("/home", allPet, (req, res, next)=>{
 });
 
 router.get("/records", appoint, (req, res, next) => {
-    
+    const data = req.event
+    return res.json(data)
 } )
 
 router.get("/petprofile/:petid", petprofile, (req, res) => {
@@ -105,7 +112,7 @@ router.get("/petprofile/:petid/vaccine", petvaccine, (req, res, next) => {
 })
 
 
-const calendar = (req, res, next) => {
+/*const calendar = (req, res, next) => {
     const userRegisteredCookie = req.cookies.userRegistered;
     const decodedToken = jwt.decode(userRegisteredCookie, process.env.JWT_SECRET);
     //const {date} = req.body;
@@ -114,19 +121,36 @@ const calendar = (req, res, next) => {
           return next()
           //console.log(res.all_event)
     })
-}
+}*/
 
-router.get("/calendar", calendar, (res, req, next) => {
-    const data = res.all_event;
-    console.log("/calendar" + "\n" + data)
-    try{
-        return res.json(data);
-    }catch{
-        console.log("/calen error")
-    }                                                                                            
-})
+router.get("/calendar", (req, res, next) => {
+    const userRegisteredCookie = req.cookies.userRegistered;
+    const decodedToken = jwt.decode(userRegisteredCookie, process.env.JWT_SECRET);
+    const { selectedMonth } = req.body;
 
-router.put("/appointment/:appid", appoint)
+    try {
+        db.query(
+            "SELECT *, DATE_FORMAT(Appointment.date, '%d %M %Y') appdate  FROM Pet INNER JOIN Appointment ON Appointment.petID = Pet.petID INNER JOIN Procedural ON Procedural.procID = Appointment.procID INNER JOIN Vaccine ON Vaccine.vacID = Procedural.vacID WHERE MONTH(Appointment.date) = MONTH(CURRENT_DATE()) AND YEAR(CURRENT_DATE()) = YEAR(Appointment.date) AND id = ?",
+            [decodedToken.id],
+            (error, results) => {
+                if (error) {
+                    console.error("Error in query:", error);
+                    return res.status(500).json({ error: "Database error" });
+                }
+                const data = results;
+                res.json(data);
+
+                console.log("From Calendar\n", results);
+            }
+        );
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred" });
+    }
+});
+
+
+router.put("/appointment/:appid", updateApp)
 
 router.get("/userprofile", userprofile, (req, res) => {
     const data = res.userdata
@@ -138,6 +162,30 @@ router.post("/register", register, (req, res) => {
 })
 
 router.put("/petprofile/:petid/edit", upload.single("petPfp"), petEdit)
+
+router.put("/petprofile/:petid/delete", petdelete, (req, res)=>{
+    res.redirect('/home');
+})
+
+router.get("/petprofile/:petid/record", petrecord, (req, res) => {
+    let data = res.allrec;
+    return res.json(data);
+})
+
+router.get("/petprofile/:petid/addrecord", allprocedure, (req, res) => {
+    let data = res.allprocedure;
+    return res.json(data);
+})
+
+router.post("/petprofile/:petid/addrecord", addrecord)
+
+//router.post("/upload", selectmonth)
+
+router.get("/calendar/:data", selectmonth, (req, res, next)=>{
+    const data = res.event
+    console.log(data)
+    return res.json(data)
+})
 
 router.get("/logout", logout);
 

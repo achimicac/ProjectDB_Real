@@ -1,31 +1,52 @@
-/*const db = require("../routes/db-config.js");
-const jwt = require("jsonwebtoken");*/
+import dayjs from 'dayjs';
 import {db} from '../routes/db-config.js';
-import fs from 'fs';
-import jwt from 'jsonwebtoken';
-
-//ว่าจะมาทำcheck เพิ่มว่าถ้าไม่ใช่เจ้าของsccountให้มันrenderหน้าอื่น
 
 export const petprofile = async (req, res, next) => {
-      console.log("req.params" + req.params.petid)
+      console.log("req.params" + req.params.petid);
       try {
-            db.query("SELECT *, DATE_FORMAT(petDoB, '%d %M %Y') bd, DATE_FORMAT(petDoB, '%e %M %Y') showbd FROM Pet WHERE petID = ?", [req.params.petid], (err, result) => {
-                  if (err) {
-                        return console.log("Can't found this user");
-                  }else{
-                        const binaryData = result[0].petPfp;
-                        const petPfpUrl = `data:image/jpeg;base64,${binaryData.toString('base64')}`;
-                        result[0].petPfpUrl = petPfpUrl;
-                        res.petinfo = result
-                        console.log(res.petinfo)
-                        //console.log("from petprofile.js: " + req.params.petid + " name: " + result[0].petName);
-                        return next();
+          db.query("SELECT * FROM Pet WHERE petID = ?",
+              [req.params.petid],
+              (err, result) => {
+                  function calculateYears(petDoB) {
+                        return Math.floor((Date.now() - new Date(petDoB)) / (365.25 * 24 * 60 * 60 * 1000));
+                    }
+                    
+                    function calculateMonths(petDoB) {
+                        const day = Math.floor((Date.now() - new Date(petDoB)) / (24 * 60 * 60 * 1000))
+                        return Math.floor((day%365.25)/30.44);
+                    }
+                    
+                    function calculateWeeks(petDoB) {
+                        const day = Math.floor((Date.now() - new Date(petDoB)) / (24 * 60 * 60 * 1000))
+                        return Math.floor((day%365.25%30.44)/7);
+                    }
+                    
+                    function calculateDays(petDoB) {
+                        const day = Math.floor((Date.now() - new Date(petDoB)) / (24 * 60 * 60 * 1000))
+                        return Math.floor(day%365.25%30.44%7);
                   }
-            })
+                  if (err) {
+                      console.log("Can't find this user");
+                      // Handle the error appropriately
+                      return res.status(404).send("User not found");
+                  } else {
+                      const binaryData = result[0].petPfp;
+                      let petPfpUrl = `data:image/jpeg;base64,${binaryData.toString('base64')}`;
+                      result[0].petPfpUrl = petPfpUrl;
+                      result[0].days = calculateDays(result[0].petDoB)
+                      result[0].weeks = calculateWeeks(result[0].petDoB)
+                      result[0].months = calculateMonths(result[0].petDoB)
+                      result[0].years = calculateYears(result[0].petDoB)
+                      result[0].petBDShow = dayjs(result[0].petDoB, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                      res.petinfo = result; // Storing data in res.locals
+                      console.log(res.petinfo);
+                      return next();
+                  }
+              }
+          );
       } catch (error) {
-            throw error;
-            
+          console.error(error);
+          return res.status(500).send("Something went wrong");
       }
-}
-
-//module.exports = petprofile;
+  };
+  // DATE_FORMAT(petDoB, '%d %M %Y') bd, FLOOR(TIMESTAMPDIFF(WEEK, petDoB, CURDATE()) / 52) AS years, FLOOR(MOD(TIMESTAMPDIFF(MONTH, petDoB, CURDATE()), 12)) AS months, FLOOR(MOD(TIMESTAMPDIFF(DAY, petDoB, CURDATE()), 30) / 7) AS weeks

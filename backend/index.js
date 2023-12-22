@@ -12,6 +12,8 @@ import {router} from '../backend/routes/pages.js';
 import {router as auth} from '../backend/controllers/auth.js'
 import fileUpload from 'express-fileupload';
 import bodyParser from "body-parser";
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
 /*app.use("/js", express.static(path.join(__dirname + "/public/js")));
 app.use("/css", express.static(path.join(__dirname + "/public/css")));*/
@@ -19,8 +21,7 @@ app.use("/css", express.static(path.join(__dirname + "/public/css")));*/
 app.set("views", "./views");*/
 app.use("/uploads", express.static('../uploads'));
 app.use(cookieParser());
-app.use(express.urlencoded({extended: true}));
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.urlencoded({extended: true, limit: '100mb'}));
 app.use(express.json()); //Can read the json file that get from user register.html
 /*
 app.use(cors(
@@ -65,6 +66,6 @@ db.connect((err) => {
 });
 
 app.use("/", router);
-app.use("/api", auth);
+//app.use("/api", auth);
 
 app.listen(port);

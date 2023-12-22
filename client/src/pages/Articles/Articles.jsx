@@ -44,19 +44,14 @@ const Articles = () => {
                         <div className="article" key={article.articleID}>
                             {article.petType && <h2>{article.title}</h2>}
 
-                            <img src={article.articlePic} alt="" />
+                            <img src={article.articlePfp} alt="" />
                             <p>{article.description}</p>
                             <Link to={`${article.articleLink}`} style={{ textDecoration: 'none' }}><a class="read-more">Read More</a></Link>
                         </div>
 
                     ))}
 
-                    <div class="article">
-                        <h2>Article Title 2</h2>
-                        <img src="https://cdn.shopify.com/s/files/1/0531/2475/9744/files/1_2.jpg?v=1631104786" alt="Article 2 Image"/>
-                            <p>This is a brief summary of the article content.</p>
-                            <a href="article2.html" class="read-more">Read More</a>
-                    </div>
+                    
                 </main>
 
                 <nav class="navigate">

@@ -31,11 +31,6 @@ const EditUser = () => {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
 
-        if (user.pw !== user.conf_pw) {
-            alert('Password and confirm password do not match. Please try again.');
-            return;
-        }
-
         try {
             const resEdit = await axios.put(`http://localhost:3009/userprofile/edit`, user); 
             if (resEdit.data.status === "success") {
@@ -59,8 +54,6 @@ const EditUser = () => {
         lname: '',
         email: '',
         phone: '',
-        pw: '',
-        conf_pw: '',
     });
 
     console.log(user);
@@ -95,10 +88,7 @@ const EditUser = () => {
                             <input id="email" type="text" value={user.email} onChange={handleChange} />
                             <label for="phone">Phone Number</label>
                             <input id="phone" type="tel" value={user.phone} onChange={handleChange} />
-                            <label for="pw">Password</label>
-                            <input id="pw" type="text" value={user.pw} onInput={handleChange}/>
-                            <label for="conf_pw">Confirm password</label>
-                            <input id="conf_pw" type="text" value={user.conf_pw} onInput={handleChange} />
+                            
                         </div>
 
                         <div class="CancelAndSubmit">

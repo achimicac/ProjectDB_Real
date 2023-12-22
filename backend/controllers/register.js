@@ -19,7 +19,7 @@ export const register = async (req, res) => {
             //Check ว่าเคยลงไปยัง พวกstatus กับ error successเชื่อมอยู่กับหน้าregister.jsในpublicนะ
             db.query('SELECT * FROM User where username = ? OR email = ?', [username, email], async (err, result) => {
                   //console.log("from db: " + result[0].username + " " + result[0].email);
-                  console.log("from db: " + result[0]);
+                  console.log("from db : " + result[0]);
                   if (err) throw err;
                   if (result[0]) {
                         if(result[0].username === username && result[0].email === email){

@@ -4,6 +4,7 @@ import '../EditPet/EditPet.css';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import dayjs from 'dayjs';
 
 const EditPet = () => {
     const {petid} = useParams();
@@ -14,7 +15,8 @@ const EditPet = () => {
         petType: '',
         petGender: '',
         petDoB: '',
-        bd: ''
+        petBDShow: '',
+        petPfpUrl: ''
     });
 
     const navigate = useNavigate()
@@ -22,63 +24,36 @@ const EditPet = () => {
     axios.defaults.withCredentials = true;
     /////////////////
     const handleChange = (e) => {
-        const { name , value, files } = e.target;
+    const { name, value, files } = e.target;
 
-        if (name === 'petPfp') {
-            const reader = new FileReader();
-            const file = files[0];
+    if (name === 'petPfp') {
+        const reader = new FileReader();
+        const file = files[0];
 
-            reader.onloadend = () => {
-                setPet({
-                    ...pet,
-                    [name]: {
-                        file,
-                        dataUrl: reader.result,
-                    },
-                });
-            };
-            if (file) {
-                reader.readAsDataURL(file);
-            } 
-        } else {
+        reader.onloadend = () => {
             setPet({
                 ...pet,
-                [name]: value,
+                petPfp: {
+                    file,
+                    dataUrl: reader.result,
+                },
+                petPfpUrl: reader.result, // Update petPfpUrl here
             });
+        };
+        if (file) {
+            reader.readAsDataURL(file);
         }
-    };
-    /////////////////
-
-    /*window.onload = function () {
-        const inputFile = document.getElementById('file');
-        const imgArea = document.querySelector('.img-area');
-
-        inputFile.addEventListener('file', function () {
-            const image = this.files[0]
-            if (image.size < 2000000) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const allImg = imgArea.querySelectorAll('img');
-                    allImg.forEach(item => item.remove());
-                    const imgUrl = reader.result;
-                    const img = document.createElement('img');
-                    img.src = imgUrl;
-                    imgArea.appendChild(img);
-                    imgArea.classList.add('active');
-                    imgArea.dataset.img = image.name;
-                }
-                reader.readAsDataURL(image);
-            } else {
-                alert("Image size more than 2MB");
-            }
-        })
-    }*/
-
-    /*const handleChange = (e) => {
-        setPet({ ...pet, [e.target.name]: e.target.value })
-        console.log(pet)
-    }*/
-
+    } else if (name === 'petDoB') {
+        setPet({
+            ...pet,
+            petBDShow: dayjs(value, 'YYYY-MM-DD').format('YYYY-MM-DD'), // Update petBDShow when petDoB changes
+        });
+    } else {
+        setPet({
+            ...pet,
+            [name]: value,
+        });
+    }};
     useEffect(() => {
         const fetchPetData = async () => {
             try {
@@ -102,6 +77,8 @@ const EditPet = () => {
             petGender: pet.petGender,
             petDoB: pet.petDoB,
             petPfp: pet.petPfp,
+            petBDShow: pet.petBDShow,
+            petPfpUrl: pet.petPfpUrl
         };
         console.log(data)
 
@@ -124,6 +101,7 @@ const EditPet = () => {
 
     console.log(pet.petName)
     console.log(pet.petPfp)
+    console.log(pet.petBDShow)
 
     return (
         <div className='EditPet'>
@@ -141,14 +119,20 @@ const EditPet = () => {
             </div>
             <main>
                 <form action="" onSubmit={handleClick}>
-                    <div class="container">
-                        <div class="img-area" data-img="">
+                <div class="container">
+                <div class="img-area" data-img="">
+                    {pet.petPfpUrl ? (
+                        <img src={pet.petPfpUrl} alt="Pet" className="preview-image" />
+                    ) : (
+                        <>
                             <i class='bx bxs-cloud-upload icon'></i>
                             <h3>Upload Image</h3>
                             <p>Image size must be less than <span>2MB</span></p>
-                        </div>
-                        <input type="file" id="file" name="petPfp" multiple={false} onChange={ handleChange }/>
-                    </div>
+                        </>
+                    )}
+                </div>
+                <input type="file" id="file" name="petPfp" multiple={false} onChange={handleChange} />
+            </div>
                 
                     <div class="textinfo">
                         <label for="name">Name</label>
@@ -191,10 +175,10 @@ const EditPet = () => {
                                 }
                             })()}
     
-                        <label for="DoB" name="petDoB" onChange={handleChange}>Birthday: {pet.bd}</label>
+                        <label for="DoB" name="petDoB" onChange={handleChange}>Birthday: {pet.petBDShow}</label>
                         <input id="DoB" type="date" name="petDoB" value={pet.petDoB} onChange={handleChange} />
                         <div class="CancelAndSubmit">
-                            <Link to={`/petprofile/${petid}`}><button id="cancel" class="button">Cancel</button></Link>
+                            <Link to={`/petprofile/${pet.petID}/record`}><button id="cancel" class="button">Cancel</button></Link>
                             <button id="submit" class="button" type="submit" name="submit" onClick={handleClick}>Submit</button>
                         </div>
                     </div>

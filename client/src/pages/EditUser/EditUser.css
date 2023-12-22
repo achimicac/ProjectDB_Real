@@ -5,11 +5,6 @@
 }
 
 .EditUser body {
-    display: flex;
-    padding: 60px;
-    justify-content: center;
-    align-items: center;
-    min-height: 90vh;
     background-color: rgb(247, 247, 247);
     font-family: 'Catamaran';
 }
@@ -27,12 +22,24 @@
     transform: scale(1.15);
 }
 
+.EditUser header{
+    background-color: rgb(117, 202, 199);
+    height: 120px;
+}
+
 .EditUser main {
+    display: flex;
+    flex-direction: column;
+    max-width: 120vh;
+    margin: auto;
     background-color: #fff;
-    border-radius: 30px;
-    padding: 20px;
-    width: 500px;
+    padding-left: 0;
+    padding-right: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     position: relative;
+    padding-top: 0;
+    padding-bottom: 80px;
 }
 
 .EditUser .container {
@@ -41,73 +48,13 @@
 
 }
 
-.EditUser .img-area {
-    position: relative;
-    width: 270px;
-    aspect-ratio: 1/1;
-    background-color: rgb(247, 247, 247);
-    border-radius: 15px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 0 auto;
-}
-
-.EditUser .img-area h3 {
-    font-size: 20px;
-    font-weight: 500;
-    margin-bottom: 6px;
-}
-
-.EditUser .img-area p {
-    color: #999;
-}
-
-.EditUser .img-area p span {
-    font-weight: 600;
-}
-
-.EditUser .img-area img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 100;
-}
-
-.EditUser #file {
-    margin: 20px;
-    position: absolute;
-    left: 80px;
-}
-
-
-.EditUser #file::-webkit-file-upload-button {
-    padding: 7px 20px;
-    border-radius: 20px;
-    background-color: rgb(117, 202, 199);
-    color: rgb(255, 255, 255);
-    border: none;
-    cursor: pointer;
-}
-
-.EditUser #file::-webkit-file-upload-button:hover {
-    background-color: rgb(127, 109, 94);
-    color: #fff;
-    transition: .3s;
-}
-
-
 .EditUser .textinfo {
     margin-top: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
     display: flex;
     flex-direction: column;
+    font-weight: bold;
 }
 
 .EditUser .textinfo input,
@@ -132,53 +79,49 @@
     font-size: 17px;
 }
 
-.EditUser #type {
-    font-family: 'Catamaran';
-    appearance: none;
-}
 
-.EditUser #selectarrow {
-    font-size: 25px;
-    position: absolute;
-
-
-}
-
-.EditUser .CancelAndSubmit {
-    margin-top: 30px;
-    margin-bottom: 10px;
+.EditUser .CancelAndSubmit{
     display: flex;
     justify-content: center;
+    margin: 20px;
 }
 
-.EditUser .button {
-    margin: 5px;
-    font-size: 20px;
+.EditUser button {
+    margin: 10px;
+    font-size: 18px;
     padding: 10px 30px;
     border-radius: 40px;
     cursor: pointer;
+    width: 200px;
+    font-weight: 600;
 }
 
 .EditUser #cancel {
     background-color: rgb(255, 255, 255);
-    border: solid rgb(179, 179, 179);
+    border: 2px solid rgb(179, 179, 179);
     color: rgb(179, 179, 179);
+    box-shadow: rgb(179, 179, 179) 4px 4px 0 0;
     transition: .3s;
 }
 
 .EditUser #cancel:hover {
     background-color: rgb(179, 179, 179);
     color: white;
+    border: 2px solid rgb(126, 126, 126);
+    box-shadow: rgb(126, 126, 126) 4px 4px 0 0;
 }
 
 .EditUser #submit {
     background-color: rgb(255, 255, 255);
-    border: solid rgb(117, 202, 199);
+    border: 2px solid rgb(117, 202, 199);
+    box-shadow: rgb(117, 202, 199) 4px 4px 0 0;
     color: rgb(117, 202, 199);
 }
 
 .EditUser #submit:hover {
     background-color: rgb(117, 202, 199);
+    border: 2px solid rgb(92, 158, 156);
+    box-shadow: rgb(92, 158, 156) 4px 4px 0 0;
     color: white;
     transition: .3s;
 }
@@ -203,4 +146,83 @@
     grid-template-columns: 1fr 1fr 1fr;
     text-align: center;
     z-index: 1000;
+}
+
+
+@media screen and (min-width: 680px) { 
+
+    .EditUser .back i {
+        top: 30px;
+        left: 80px;
+        z-index: 500;
+    }
+
+
+    .EditUser .navigate{
+        padding-top: 70px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction:column ;
+        width: 60px;
+        z-index: 750;
+    }
+
+    .EditUser .navigate a:nth-child(1){
+        order: 1;
+    }
+
+    .EditUser .navigate a{
+        padding: 15px;
+    }
+
+    .EditUser .textinfo {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+}
+
+
+
+.EditUser .navigate i {
+    transition: all .2s ease-in-out;
+    color: rgb(88, 75, 65);
+}
+
+@media screen and (min-width: 1000px) {
+
+    .EditUser body{
+        margin-left:30px ;
+    }
+
+    .EditUser main{
+        justify-content: left;
+        align-items: center;
+        margin-top: 100px;
+        padding-bottom: 0px;
+        flex-direction: row;
+        position: relative;
+    }
+
+    .EditUser .textinfo {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: -60px;
+        width: 500px;
+    }
+
+    .EditUser header {
+        padding-top: 150px;
+        height: 725px;
+        width: 450px;
+    }
+
+    .EditUser .CancelAndSubmit{
+        display: grid;
+        grid-template-columns:1fr 1fr ;
+        position: absolute;
+        bottom: 10px;
+        right: 25px;
+    }
+
 }

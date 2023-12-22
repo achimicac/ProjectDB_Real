@@ -34,7 +34,8 @@
 }
 
 .Records main {
-    margin: 5px 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     padding-top: 90px;
     padding-bottom: 85px;
     
@@ -46,6 +47,18 @@
     padding: 30px;
     border-radius: 10px;
     color: rgb(88, 75, 65);
+}
+
+.Records .addrecord i {
+    position: fixed;
+    bottom: 90px;
+    left: auto;
+    right: 25px;
+    color: rgb(247, 247, 247);
+    background-color: rgb(127, 109, 94);
+    border-radius: 50%;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 

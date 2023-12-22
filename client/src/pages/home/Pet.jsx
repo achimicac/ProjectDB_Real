@@ -35,8 +35,9 @@ const Pet = () => {
         }
         fetchAllPets();
     }, []);
+    
 
-
+    console.log(pets)
 
 
     return (
@@ -72,16 +73,6 @@ const Pet = () => {
                     ))}
                     
                     
-                    <figure>
-                        <Link to='/petregister'><img
-                            src="https://hips.hearstapps.com/hmg-prod/images/chow-chow-portrait-royalty-free-image-1652926953.jpg?crop=0.44455xw:1xh;center,top&resize=980:*" />
-                            <figcaption>Aert</figcaption></Link>
-                    </figure>
-                    <figure>
-                        <img
-                            src="https://hips.hearstapps.com/hmg-prod/images/chow-chow-portrait-royalty-free-image-1652926953.jpg?crop=0.44455xw:1xh;center,top&resize=980:*"/>
-                            <figcaption>BBBB</figcaption>
-                    </figure>
                     <div class="addpet">
                         <a href="#"><Link to="/petregister"><i class="fa-solid fa-plus fa-4x"></i></Link></a>
                     </div>

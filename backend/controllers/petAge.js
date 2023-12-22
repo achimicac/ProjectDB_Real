@@ -1,0 +1,9 @@
+
+
+/*SELECT
+	petDoB,
+    FLOOR(TIMESTAMPDIFF(WEEK, petDoB, CURDATE()) / 52) AS years,
+    FLOOR(MOD(TIMESTAMPDIFF(MONTH, petDoB, CURDATE()), 12)) AS months,
+    FLOOR(MOD(TIMESTAMPDIFF(DAY, petDoB, CURDATE()), 30) / 7) AS weeks
+FROM 
+    Pet;*/
